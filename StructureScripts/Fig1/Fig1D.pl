@@ -1,0 +1,63 @@
+open(file,"/lustre/home/zhangyw/data/bowtie2index/hg38_transcript_gencodeV33/3UTR_ENST_composition.csv");
+while(<file>)
+{
+	chomp;
+	@token=split(/\,/,$_);
+	$tp{$token[0]}=$token[8];
+}
+close(file);
+open(file,"/lustre/home/zhangyw/data/bowtie2index/hg38_transcript_gencodeV33/5UTR_ENST_composition.csv");
+while(<file>)
+{
+	chomp;
+	@token=split(/\,/,$_);
+	$fp{$token[0]}=$token[8];
+}
+close(file);
+open(file,"/lustre/home/zhangyw/data/bowtie2index/hg38_transcript_gencodeV33/CDS_ENST_composition.csv");
+while(<file>)
+{
+	chomp;
+	@token=split(/\,/,$_);
+	$cds{$token[0]}=$token[8];
+}
+close(file);
+$total5utr=0;
+$total3utr=0;
+$totalcds=0;
+open(file,"/lustre/zhangyw/myProject/Dhx36/PAR_CLIP/03_parse/newexon/finalfile.pcgtrans.bed");
+while(<file>)
+{
+	chomp;
+	@token=split(/\t/,$_);
+	if($token[13] eq "5UTR")
+	{
+		if(exists($fp{$token[9]}))
+		{
+			$utr5++;
+			$len=$fp{$token[9]};
+			$total5utr=$total5utr+$len;
+		}
+	}
+	if($token[13] eq "3UTR")
+	{
+		if(exists($tp{$token[9]}))
+		{
+		$utr3++;
+		$len=$tp{$token[9]};
+		$total3utr=$total3utr+$len;
+		}
+	}
+	if($token[13] eq "CDS")
+	{
+		if(exists($cds{$token[9]}))
+		{
+		$cds++;
+		$len=$cds{$token[9]};
+		$totalcds=$totalcds+$len;
+		}
+	}
+}
+close(file);
+
+print $utr5."\t".$total5utr."\n".$utr3."\t".$total3utr."\n".$cds."\t".$totalcds."\n";
