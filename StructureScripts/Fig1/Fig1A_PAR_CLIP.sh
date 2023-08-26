@@ -1,31 +1,20 @@
+#CTK processing
 for f in Dhx36_E335A_1 Dhx36_E335A_2; do
-perl /lustre/home/zhangyw/bin/ctk/fastq_filter.pl -v -if sanger -f mean:0-24:20 -of fastq ../$f.fastq - | gzip -c > $f.filter.fastq.gz
+  ##fastq filter
+  perl /lustre/home/zhangyw/bin/ctk/fastq_filter.pl -v -if sanger -f mean:0-24:20 -of fastq ../$f.fastq - | gzip -c > $f.filter.fastq.gz
+  ##adaptor removal
+  cutadapt -f fastq -n 1 --quality-cutoff 5 -m 20 -a TAATATCGTATGCCGTCTTCTGCTTG -o $f.filter.trim.fastq.gz ../$f.fastq > $f.cutadpt.log
+  ##collapse sequences
+  perl /lustre/home/zhangyw/bin/ctk/fastq2collapse.pl ../00_trim/$f.filter.trim.fastq.gz - | gzip -c > $f.filter.trim.c.fastq.gz
+  ##alignment using bwa
+  bwa aln -t 4 -n 0.06 -q 20 /lustre/home/zhangyw/data/bwaIndex/hg38/hg38_gencodeV33.fa ../01_collapse/$f.filter.trim.c.fastq.gz > $f.sai
+  bwa samse /lustre/home/zhangyw/data/bwaIndex/hg38/hg38_gencodeV33.fa $f.sai ../01_collapse/$f.filter.trim.c.fastq.gz | gzip -c > $f.sam.gz
+  ##parse sam file
+  perl /lustre/home/zhangyw/bin/ctk/parseAlignment.pl -v --map-qual 1 --min-len 18 --mutation-file $f.mutation.txt ../02_align/$f.sam.gz - | gzip -c > $f.tag.bed.gz
+  ##exact tag collapse
+  perl /lustre/home/zhangyw/bin/ctk/tag2collapse.pl -v -big -weight --weight-in-name --keep-max-score --keep-tag-name $f.tag.bed $f.tag.uniq.bed
 done
 
-for f in Dhx36_E335A_1 Dhx36_E335A_2; do
-cutadapt -f fastq -n 1 --quality-cutoff 5 -m 20 -a TAATATCGTATGCCGTCTTCTGCTTG -o $f.filter.trim.fastq.gz ../$f.fastq > $f.cutadpt.log
-done
-
-for f in Dhx36_E335A_1 Dhx36_E335A_2; do
-perl /lustre/home/zhangyw/bin/ctk/fastq2collapse.pl ../00_trim/$f.filter.trim.fastq.gz - | gzip -c > $f.filter.trim.c.fastq.gz
-done
-
-for f in Dhx36_E335A_1 Dhx36_E335A_2; do
-bwa aln -t 4 -n 0.06 -q 20 /lustre/home/zhangyw/data/bwaIndex/hg38/hg38_gencodeV33.fa ../01_collapse/$f.filter.trim.c.fastq.gz > $f.sai
-bwa samse /lustre/home/zhangyw/data/bwaIndex/hg38/hg38_gencodeV33.fa $f.sai ../01_collapse/$f.filter.trim.c.fastq.gz | gzip -c > $f.sam.gz
-done
-
-for f in Dhx36_E335A_1 Dhx36_E335A_2; do
-perl /lustre/home/zhangyw/bin/ctk/parseAlignment.pl -v --map-qual 1 --min-len 18 --mutation-file $f.mutation.txt ../02_align/$f.sam.gz - | gzip -c > $f.tag.bed.gz
-done
-
-for f in Dhx36_E335A_1 Dhx36_E335A_2; do
-python /lustre/home/zhangyw/bin/ctk/joinWrapper.py $f.mutation.txt $f.tag.uniq.bed 4 4 N $f.tag.uniq.mutation.txt
-done
-
-for f in Dhx36_E335A_1 Dhx36_E335A_2; do
-perl /lustre/home/zhangyw/bin/ctk/tag2collapse.pl -v -big -weight --weight-in-name --keep-max-score --keep-tag-name $f.tag.bed $f.tag.uniq.bed
-done
 
 perl /lustre/home/zhangyw/bin/ctk/bed2rgb.pl -v -col "188,0,0" Dhx36_E335A_1.tag.uniq.bed Dhx36_E335A_1.tag.uniq.rgb.bed
 perl /lustre/home/zhangyw/bin/ctk/bed2rgb.pl -v -col "188,0,0" Dhx36_E335A_2.tag.uniq.bed Dhx36_E335A_2.tag.uniq.rgb.bed
