@@ -1,5 +1,5 @@
 import pandas as pds
-
+from Bio import SeqIO
 df=pds.read_table('/cluster/home/zyw_jh/projects/structure/shapeG4/unsplice.info',sep="\t")
 dd=dict(zip(df['rG4_intervals'],df['rG4_structural_class']))
 dt=dict(zip(df['rG4_intervals'],df['Transcript_ids']))
