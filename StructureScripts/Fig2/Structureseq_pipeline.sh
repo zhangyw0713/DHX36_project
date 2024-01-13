@@ -5,14 +5,14 @@
 fastqc -t 6 file.fq
 
 #Adapter removal
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-NAI-rep1_1_trimmed.fq WT-NAI-rep1_L3_1.fq 2>wt_nai_rep1.log
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-NAI-rep2_1_trimmed.fq WT-NAI-rep2_L2_1.fq 2>wt_nai_rep2.log
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-DMSO-rep1_1_trimmed.fq WT-DMSO-rep1_L3_1.fq 2>wt_dmso_rep1.log
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-DMSO-rep2_1_trimmed.fq WT-DMSO-rep2_L2_1.fq 2>wt_dmso_rep2.log
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-NAI-rep1_1_trimmed.fq KO-NAI-rep1_L3_1.fq 2>ko_nai_rep1.log
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-NAI-rep2_1_trimmed.fq KO-NAI-rep2_L2_1.fq 2>ko_nai_rep2.log
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-DMSO-rep1_1_trimmed.fq KO-DMSO-rep1_L3_1.fq 2>ko_dmso_rep1.log
-cutadapt -q 30 -m 20 -n 1 -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-DMSO-rep2_1_trimmed.fq KO-DMSO-rep2_L2_1.fq 2>ko_dmso_rep2.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-NAI-rep1_1_trimmed.fq WT-NAI-rep1_L3_1.fq 2>wt_nai_rep1.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-NAI-rep2_1_trimmed.fq WT-NAI-rep2_L2_1.fq 2>wt_nai_rep2.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-DMSO-rep1_1_trimmed.fq WT-DMSO-rep1_L3_1.fq 2>wt_dmso_rep1.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o WT-DMSO-rep2_1_trimmed.fq WT-DMSO-rep2_L2_1.fq 2>wt_dmso_rep2.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-NAI-rep1_1_trimmed.fq KO-NAI-rep1_L3_1.fq 2>ko_nai_rep1.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-NAI-rep2_1_trimmed.fq KO-NAI-rep2_L2_1.fq 2>ko_nai_rep2.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-DMSO-rep1_1_trimmed.fq KO-DMSO-rep1_L3_1.fq 2>ko_dmso_rep1.log
+cutadapt -q 30 -m 20 -n 1 -a NNNNNNAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -o KO-DMSO-rep2_1_trimmed.fq KO-DMSO-rep2_L2_1.fq 2>ko_dmso_rep2.log
 
 #mapping to transcriptome reference
 bowtie2 -a -p 12 -x transcriptome_reference -q WT-DMSO-rep1_1_trimmed.fq >WT_DMSO_rep1.sam 2> WT_DMSO_rep1.log
